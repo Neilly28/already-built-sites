@@ -74,9 +74,9 @@
   <style>
     /* ── Scroll progress bar ── */
     #scroll-progress {
-      position: fixed; top: 0; left: 0; z-index: 999;
+      position: fixed; top: 0; left: 0; z-index: 9998;
       height: 3px; width: 0%; background: var(--red);
-      transition: width 0.1s linear;
+      transition: width 0.1s linear, top 0.1s linear;
       box-shadow: 0 0 8px rgba(232,16,42,0.6);
     }
 
@@ -530,7 +530,7 @@
     color: #fff;
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 200;
+    z-index: 10000;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   #claim-banner .cb-inner {
@@ -785,15 +785,18 @@
     var banner = document.getElementById('claim-banner');
     var modal = document.getElementById('claim-modal');
     var nav = document.querySelector('nav') || document.getElementById('nav');
+    var progressBar = document.getElementById('scroll-progress');
     function setBannerOffset() {
       var h = banner && banner.offsetParent !== null ? banner.offsetHeight : 0;
       if (nav) nav.style.top = h + 'px';
+      if (progressBar) progressBar.style.top = h + 'px';
     }
     setBannerOffset();
     window.addEventListener('resize', setBannerOffset);
     document.getElementById('cb-dismiss-btn').addEventListener('click', function() {
       banner.style.display = 'none';
       if (nav) nav.style.top = '0';
+      if (progressBar) progressBar.style.top = '0';
     });
     document.getElementById('cb-open-modal').addEventListener('click', function() {
       modal.classList.add('open');
