@@ -524,162 +524,266 @@
 <body>
 
 <!-- ══ CLAIM BANNER ══ -->
+<style>
+  #claim-banner {
+    background: #7C3AED;
+    color: #fff;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  #claim-banner .cb-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #claim-banner .cb-text {
+    flex: 1;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+  }
+  #claim-banner .cb-text strong { color: #fff; }
+  #claim-banner .cb-cta {
+    background: #fff;
+    color: #7C3AED;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  #claim-banner .cb-cta:hover { background: #EDE9FE; }
+  #claim-banner .cb-dismiss {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 4px;
+    line-height: 1;
+  }
+  #claim-banner .cb-dismiss:hover { color: #fff; }
+
+  /* ── Pricing Modal ── */
+  #claim-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.55);
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  #claim-modal.open { display: flex; }
+  #claim-modal .cm-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    max-width: 480px;
+    width: calc(100% - 32px);
+    position: relative;
+  }
+  #claim-modal .cm-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    background: none; border: none;
+    font-size: 22px; color: #999;
+    cursor: pointer; line-height: 1;
+  }
+  #claim-modal .cm-close:hover { color: #333; }
+  #claim-modal .cm-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #7C3AED;
+    margin-bottom: 6px;
+  }
+  #claim-modal h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  #claim-modal .cm-sub {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 24px;
+  }
+  #claim-modal .cm-plans {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  #claim-modal .cm-plan {
+    border: 1.5px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  #claim-modal .cm-plan:hover { border-color: #7C3AED; }
+  #claim-modal .cm-plan.featured {
+    border-color: #7C3AED;
+    background: #FAFAFE;
+  }
+  #claim-modal .cm-badge {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    background: #7C3AED;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: .05em;
+  }
+  #claim-modal .cm-plan-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #999;
+  }
+  #claim-modal .cm-plan.featured .cm-plan-name { color: #7C3AED; }
+  #claim-modal .cm-price {
+    font-size: 26px;
+    font-weight: 800;
+    color: #111;
+    line-height: 1;
+  }
+  #claim-modal .cm-price span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #999;
+  }
+  #claim-modal .cm-desc {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+    flex: 1;
+  }
+  #claim-modal .cm-features {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  #claim-modal .cm-features li {
+    font-size: 11px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  #claim-modal .cm-features li::before {
+    content: '✓';
+    color: #7C3AED;
+    font-weight: 700;
+    font-size: 10px;
+  }
+  #claim-modal .cm-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid #D1D5DB;
+    color: #111;
+    background: #fff;
+    transition: background .15s, border-color .15s;
+  }
+  #claim-modal .cm-btn:hover { background: #F3F4F6; border-color: #9CA3AF; }
+  #claim-modal .cm-plan.featured .cm-btn {
+    background: #7C3AED;
+    border-color: #7C3AED;
+    color: #fff;
+  }
+  #claim-modal .cm-plan.featured .cm-btn:hover { background: #6D28D9; border-color: #6D28D9; }
+  #claim-modal .cm-footer {
+    text-align: center;
+    font-size: 11px;
+    color: #aaa;
+  }
+  @media (max-width: 480px) {
+    #claim-modal .cm-plans { grid-template-columns: 1fr; }
+    #claim-modal .cm-plan.featured { order: -1; }
+  }
+</style>
+
 <div id="claim-banner">
-  <style>
-    #claim-banner {
-      background: #0f0f0f;
-      color: #fff;
-      padding: 0;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 200;
-      border-bottom: 1px solid #222;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-    #claim-banner .cb-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    #claim-banner .cb-label {
-      font-size: 14px;
-      color: #aaa;
-      white-space: nowrap;
-    }
-    #claim-banner .cb-label strong {
-      color: #fff;
-    }
-    #claim-banner .cb-plans {
-      display: flex;
-      gap: 10px;
-      align-items: stretch;
-    }
-    #claim-banner .cb-plan {
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 10px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      min-width: 160px;
-      background: #1a1a1a;
-      position: relative;
-    }
-    #claim-banner .cb-plan.featured {
-      border-color: #E8102A;
-      background: #1e0608;
-    }
-    #claim-banner .cb-badge {
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #E8102A;
-      color: #fff;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 2px 8px;
-      border-radius: 20px;
-      white-space: nowrap;
-      text-transform: uppercase;
-    }
-    #claim-banner .cb-plan-name {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #888;
-    }
-    #claim-banner .cb-plan.featured .cb-plan-name { color: #f87171; }
-    #claim-banner .cb-price {
-      font-size: 22px;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1;
-    }
-    #claim-banner .cb-price span {
-      font-size: 12px;
-      font-weight: 400;
-      color: #666;
-    }
-    #claim-banner .cb-feature {
-      font-size: 11px;
-      color: #666;
-      text-align: center;
-    }
-    #claim-banner .cb-plan.featured .cb-feature { color: #999; }
-    #claim-banner .cb-btn {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 7px 18px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-      border: 1px solid #444;
-      color: #fff;
-      background: transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    #claim-banner .cb-btn:hover { background: #333; border-color: #666; }
-    #claim-banner .cb-plan.featured .cb-btn {
-      background: #E8102A;
-      border-color: #E8102A;
-    }
-    #claim-banner .cb-plan.featured .cb-btn:hover { background: #c50d23; }
-    #claim-banner .cb-dismiss {
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #555;
-      font-size: 18px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 4px;
-    }
-    #claim-banner .cb-dismiss:hover { color: #aaa; }
-    @media (max-width: 640px) {
-      #claim-banner .cb-label { text-align: center; width: 100%; font-size: 13px; }
-      #claim-banner .cb-plans { width: 100%; }
-      #claim-banner .cb-plan { flex: 1; min-width: 0; padding: 10px 10px; }
-      #claim-banner .cb-dismiss { top: 10px; transform: none; }
-    }
-  </style>
   <div class="cb-inner">
-    <div class="cb-label">👋 <strong>This site was built for Jacobs Service Center.</strong> Ready to claim it?</div>
-    <div class="cb-plans">
-      <div class="cb-plan">
-        <div class="cb-plan-name">Online</div>
-        <div class="cb-price">$49<span>/mo</span></div>
-        <div class="cb-feature">Your site on your domain</div>
-        <a href="#stripe-online" class="cb-btn">Claim →</a>
+    <div class="cb-text">👋 <strong>This site was built for Jacobs Service Center.</strong> Ready to claim it?</div>
+    <button class="cb-cta" id="cb-open-modal">Claim this site →</button>
+    <button class="cb-dismiss" id="cb-dismiss-btn" aria-label="Dismiss">×</button>
+  </div>
+</div>
+
+<!-- ── Pricing Modal ── -->
+<div id="claim-modal" role="dialog" aria-modal="true" aria-label="Claim this site">
+  <div class="cm-box">
+    <button class="cm-close" id="cm-close-btn" aria-label="Close">×</button>
+    <div class="cm-eyebrow">Already Built</div>
+    <h2>Claim your new website</h2>
+    <p class="cm-sub">Your site is live and ready. Pick a plan and it's yours — no setup, no contract.</p>
+    <div class="cm-plans">
+      <div class="cm-plan">
+        <div class="cm-plan-name">Online</div>
+        <div class="cm-price">$49<span>/mo</span></div>
+        <div class="cm-desc">Your site, on your domain.</div>
+        <ul class="cm-features">
+          <li>Custom domain setup</li>
+          <li>Hosting included</li>
+          <li>Mobile-optimized</li>
+          <li>Updates on request</li>
+        </ul>
+        <a href="#stripe-online" class="cm-btn">Claim — $49/mo</a>
       </div>
-      <div class="cb-plan featured">
-        <div class="cb-badge">Most Popular</div>
-        <div class="cb-plan-name">Found</div>
-        <div class="cb-price">$129<span>/mo</span></div>
-        <div class="cb-feature">Get found when people<br>search online</div>
-        <a href="#stripe-found" class="cb-btn">Claim →</a>
+      <div class="cm-plan featured">
+        <div class="cm-badge">Most Popular</div>
+        <div class="cm-plan-name">Found</div>
+        <div class="cm-price">$129<span>/mo</span></div>
+        <div class="cm-desc">Get found when people search online.</div>
+        <ul class="cm-features">
+          <li>Everything in Online</li>
+          <li>AI search visibility</li>
+          <li>Google ranking signals</li>
+          <li>Monthly performance report</li>
+        </ul>
+        <a href="#stripe-found" class="cm-btn">Claim — $129/mo</a>
       </div>
     </div>
+    <p class="cm-footer">Cancel anytime · No setup fee · Domain info collected after payment</p>
   </div>
-  <button class="cb-dismiss" id="cb-dismiss-btn" aria-label="Dismiss">×</button>
 </div>
+
 <script>
   (function() {
     var banner = document.getElementById('claim-banner');
+    var modal = document.getElementById('claim-modal');
     var nav = document.querySelector('nav') || document.getElementById('nav');
     function setBannerOffset() {
       var h = banner && banner.offsetParent !== null ? banner.offsetHeight : 0;
@@ -690,6 +794,20 @@
     document.getElementById('cb-dismiss-btn').addEventListener('click', function() {
       banner.style.display = 'none';
       if (nav) nav.style.top = '0';
+    });
+    document.getElementById('cb-open-modal').addEventListener('click', function() {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+    document.getElementById('cm-close-btn').addEventListener('click', function() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
     });
   })();
 </script>
